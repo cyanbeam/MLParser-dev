@@ -10,6 +10,7 @@ namespace Cyan
 		char *raw;//saving raw text
 		Node *root;
 		Node *now;//saving a location for query
+		string errorMsg;
 		void Copy(MLParser & MLP)
 		{
 			if (MLP.raw == this->raw) return;
@@ -17,11 +18,12 @@ namespace Cyan
 
 			this->raw = Cyan::strcpy(MLP.raw);
 
-			root = MLP.root->Copy(nullptr);
-			now = root;
+			this->root = MLP.root->Copy(nullptr);
+			this->now = root;
+			this->errorMsg = nullptr;
 		}
 	public:
-		MLParser() :raw(nullptr), root(nullptr), now(nullptr) {}
+		MLParser() :raw(nullptr), root(nullptr), now(nullptr),errorMsg(nullptr) {}
 		MLParser(MLParser & MLP)
 		{
 			Copy(MLP);
@@ -40,6 +42,10 @@ namespace Cyan
 		string GetAttribute(const string & AttributeName) const;
 		string GetContent() const;//return content removed tags
 		string GetInner() const;//return raw inner text
+		string GetErrorMsg() const
+		{
+			return errorMsg;
+		}
 		void Dispose()
 		{
 			delete[] raw;
