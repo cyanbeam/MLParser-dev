@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include "Utility.hpp"
 using std::string;
 namespace Cyan
 {
@@ -13,7 +14,7 @@ namespace Cyan
 		string value;
 		Attribute *next;
 	public:
-		Attribute(string name_, string value_) :name(name_), value(value_), next(nullptr) {};
+		Attribute(string name_, string value_) :name(name_), value(value_), next(nullptr) {}
 		~Attribute() { delete next; }
 	};
 	class Node
@@ -25,17 +26,26 @@ namespace Cyan
 		Node *child;
 		string tagName;
 		Attribute *attributes;
-		const char *start;//saving a pointer to the start of tag "[<]html>"
+		int txtOffset;// "[<]html>"
 		int count;//the number of characters counted from "[<]html>" to " </html[>] "
 	public:
-		Node(Node *parent_, string &tagName_)
+		Node(Node *parent_)
 			:parent(parent_), 
 			brother(nullptr), 
 			child(nullptr),
-			tagName(tagName_), 
+			tagName(nullptr), 
 			attributes(nullptr), 
-			start(nullptr),
-			count(0) {};
+			txtOffset(0),
+			count(0) {}
+		Node *Copy(Node *parent_)
+		{
+			Node *tNode = new Node(parent_);
+			tNode->txtOffset;
+			tNode->count;
+			tNode->brother = brother->Copy(parent_);
+			tNode->child = child->Copy(tNode);
+			return tNode;
+		}
 		~Node() { delete attributes; delete brother; delete child; }
 		string GetAttribute(const string & AttributeName) const
 		{
