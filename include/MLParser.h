@@ -34,7 +34,7 @@ namespace Cyan
 			return *this;
 		}
 		~MLParser() {}
-		bool Parse(string html);
+		bool Parse(string & html);
 		MLParser & operator[](string tagName);
 		MLParser & operator[](int n);
 		MLParser & XPath(string xpath);
@@ -52,5 +52,52 @@ namespace Cyan
 			delete root;
 			delete now;
 		}
+	};
+	enum TokenType
+	{
+		Default,
+		LeftAngleBracket,
+		EndTag,
+		AttributeName,
+		AttributeValue,
+		RightAngleBracket
+	};
+	struct Token
+	{
+		TokenType type = Default;
+		size_t offset = 0;
+		string value = "";
+		Token *next = nullptr;
+		~Token()
+		{
+			delete next;
+		}
+	};
+	class Scanner
+	{
+	private:
+		const char *raw;
+		Token *root;
+		Token *now;
+		string GetEndTagName(size_t &offset)
+		{
+			size_t a = offset, count = 0;
+			while (raw[offset] != '>' && raw[offset] != ' ' && raw[offset] != '\0') ++offset;
+			count = offset - a;
+			return substr(raw + a, count);
+		}
+	public:
+		Scanner(const char *content) :raw(content),root(nullptr),now(nullptr) 
+		{
+			root = new Token;
+		}
+		~Scanner() { delete root; }
+		void Scan();
+		Token *next()
+		{
+			now = now->next;
+			return now;
+		}
+
 	};
 }

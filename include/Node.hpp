@@ -5,6 +5,7 @@ using std::string;
 namespace Cyan
 {
 	class MLParser;
+	class Node;
 	class Attribute
 	{
 		friend class Node;
@@ -26,8 +27,8 @@ namespace Cyan
 		Node *child;
 		string tagName;
 		Attribute *attributes;
-		int txtOffset;// "[<]html>"
-		int count;//the number of characters counted from "[<]html>" to " </html[>] "
+		size_t txtOffset;// "[<]html>"
+		size_t count;//the number of characters counted from "[<]html>" to " </html[>] "
 	public:
 		Node(Node *parent_)
 			:parent(parent_), 
@@ -40,6 +41,8 @@ namespace Cyan
 		Node *Copy(Node *parent_)
 		{
 			Node *tNode = new Node(parent_);
+			tNode->tagName = tagName;
+			tNode->attributes = attributes;
 			tNode->txtOffset;
 			tNode->count;
 			tNode->brother = brother->Copy(parent_);
