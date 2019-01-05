@@ -6,14 +6,14 @@ using std::string;
 //使用这些函数需要小心
 namespace Cyan
 {
-	char *strcpy(const char *src)
+	inline char *strcpy(const char *src)
 	{
 		size_t len = sizeof(src);
 		char *t = new char[len];
 		memcpy(t, src, len);
 		return t;
 	}
-	string substr(const char *src, size_t count)
+	inline string substr(const char *src, size_t count)
 	{
 		char *t = new char[count + 1]();
 		memcpy(t, src, count);

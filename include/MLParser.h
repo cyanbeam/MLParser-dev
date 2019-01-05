@@ -1,6 +1,7 @@
 #pragma once
-#include <string>
 #include "Node.hpp"
+#include <string>
+#include <gtest\gtest.h>
 using std::string;
 namespace Cyan
 {
@@ -75,6 +76,9 @@ namespace Cyan
 	};
 	class Scanner
 	{
+#ifdef _DEBUG
+		FRIEND_TEST(Scanner_Test, GetAttributeValue_Test);
+#endif
 	private:
 		const char *raw;
 		Token *root;

@@ -1,6 +1,6 @@
 #pragma once
-#include <string>
 #include "Utility.hpp"
+#include <string>
 using std::string;
 namespace Cyan
 {
