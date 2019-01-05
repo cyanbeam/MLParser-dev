@@ -15,9 +15,23 @@ namespace Cyan
 					lastToken->next = new Token;
 					lastToken = lastToken->next;
 					lastToken->type = EndTag;
-					lastToken->value = GetEndTagName(offset);
+					lastToken->value = GetTagName(offset);
 				}
-				//////////
+				lastToken->next = new Token;
+				lastToken = lastToken->next;
+				lastToken->type = LeftAngleBracket;
+				lastToken->value = GetTagName(offset);
+				while (raw[offset]!='>')
+				{
+					lastToken->next = new Token;
+					lastToken = lastToken->next;
+					lastToken->type = AttributeName;
+					lastToken->value = GetAttributeName(offset);
+					lastToken->next = new Token;
+					lastToken = lastToken->next;
+					lastToken->type = AttributeValue;
+					lastToken->value = GetAttributeName(offset);
+				}
 			}
 		}
 		now = root;

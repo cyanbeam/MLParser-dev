@@ -23,7 +23,7 @@ namespace Cyan
 			this->errorMsg = nullptr;
 		}
 	public:
-		MLParser() :raw(nullptr), root(nullptr), now(nullptr),errorMsg(nullptr) {}
+		MLParser() :raw(nullptr), root(nullptr), now(nullptr), errorMsg(nullptr) {}
 		MLParser(MLParser & MLP)
 		{
 			Copy(MLP);
@@ -79,15 +79,46 @@ namespace Cyan
 		const char *raw;
 		Token *root;
 		Token *now;
-		string GetEndTagName(size_t &offset)
+		string GetTagName(size_t &offset)
 		{
 			size_t a = offset, count = 0;
 			while (raw[offset] != '>' && raw[offset] != ' ' && raw[offset] != '\0') ++offset;
 			count = offset - a;
 			return substr(raw + a, count);
 		}
+		string GetAttributeName(size_t &offset)
+		{
+			while (raw[offset] == ' ' && raw[offset] != '\0') ++offset;
+			size_t a = offset, count = 0;
+			while (raw[offset] != '=' && raw[offset] != '>' && raw[offset] != ' ' && raw[offset] != '\0') ++offset;
+			count = offset - a;
+			return substr(raw + a, count);
+		}
+		string GetAttributeValue(size_t &offset)
+		{
+			if (raw[offset] == '>') return string("");//<textarea auto></textarse>,Attribute "auto" have no value
+			while (raw[offset] != '=' && raw[offset] != '\0') ++offset;
+			while ((raw[offset] == '=' || raw[offset] == ' ') && raw[offset] != '\0') ++offset;
+			while ((raw[offset] == '"' || raw[offset] == '\'') && raw[offset] != '\0') ++offset;
+			size_t a = offset, count = 0;
+			char ss = raw[offset - 1];//it should be ["] or [']
+			if (ss != '"' && ss != '\'')
+			{
+				while (raw[offset] != ' ' && raw[offset] != '>' && raw[offset] != '\0') ++offset;
+			}
+			else
+			{
+				while (raw[offset] != '\0')
+				{
+					if (raw[offset] == ss && raw[offset - 1] != '\\') break;
+					++offset;
+				}
+			}
+			count = offset - a;
+			return substr(raw + a, count);
+		}
 	public:
-		Scanner(const char *content) :raw(content),root(nullptr),now(nullptr) 
+		Scanner(const char *content) :raw(content), root(nullptr), now(nullptr)
 		{
 			root = new Token;
 		}
