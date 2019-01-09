@@ -15,24 +15,40 @@ namespace Cyan
 					lastToken->next = new Token;
 					lastToken = lastToken->next;
 					lastToken->type = EndTag;
-					lastToken->value = GetTagName(offset);
+					offset += 2;//使得raw[offset]=tagName的第一位字符
+					lastToken->value = gstrExcept('>', offset);
+					continue;
 				}
 				lastToken->next = new Token;
 				lastToken = lastToken->next;
 				lastToken->type = LeftAngleBracket;
-				lastToken->value = GetTagName(offset);
+				offset += 1;//使得raw[offset]=tagName的第一位字符
+				lastToken->value = gstrExcept(' ', '>', offset);
 				while (raw[offset]!='>')
 				{
+					skipAll(' ', offset);
 					lastToken->next = new Token;
 					lastToken = lastToken->next;
 					lastToken->type = AttributeName;
-					lastToken->value = GetAttributeName(offset);
+					lastToken->value = gstrExcept('=', ' ', '>', offset);
+					skipAll(' ', offset);
+					skipAll('=', '"', '\'', offset);
+
+					//html code:
+					///<text style="aaa" auto></text>
+					//The attribute "auto" will cause a error
+					//
+					//the next judge is to fix this bug.
+					if (raw[offset] == '>') break;
+					
 					lastToken->next = new Token;
 					lastToken = lastToken->next;
 					lastToken->type = AttributeValue;
-					lastToken->value = GetAttributeName(offset);
+					lastToken->value = gstrExcept('"', '\'', ' ', '>', offset);
+					skipAll('"', '\'', ' ', offset);
 				}
 			}
+			++offset;
 		}
 		now = root;
 	}

@@ -1,7 +1,7 @@
 #pragma once
 #include "Node.hpp"
 #include <string>
-#include <gtest\gtest.h>
+//#include <gtest\gtest.h>
 using std::string;
 namespace Cyan
 {
@@ -76,48 +76,66 @@ namespace Cyan
 	};
 	class Scanner
 	{
-#ifdef _DEBUG
-		FRIEND_TEST(Scanner_Test, GetAttributeValue_Test);
-#endif
+//#ifdef _DEBUG
+//		FRIEND_TEST(Scanner_Test, GetAttributeValue_Test);
+//#endif
 	private:
 		const char *raw;
 		Token *root;
 		Token *now;
-		string GetTagName(size_t &offset)
+		void skipExcept(char exception, size_t &offset)
+		{
+			while (raw[offset] != exception && raw[offset] != '\0') ++offset;
+		}
+		void skipExcept(char exceptionA, char exceptionB, size_t &offset)
+		{
+			while (raw[offset] != exceptionA && raw[offset] != exceptionB && raw[offset] != '\0') ++offset;
+		}
+		void skipExcept(char exceptionA, char exceptionB, char exceptionC, size_t &offset)
+		{
+			while (raw[offset] != exceptionA && raw[offset] != exceptionB && raw[offset] != exceptionC && raw[offset] != '\0') ++offset;
+		}
+		void skipExcept(char exceptionA, char exceptionB, char exceptionC, char exceptionD, size_t &offset)
+		{
+			while (raw[offset] != exceptionA && raw[offset] != exceptionB && raw[offset] != exceptionC && raw[offset] != exceptionD && raw[offset] != '\0') ++offset;
+		}
+		void skipAll(char exception, size_t &offset)
+		{
+			while (raw[offset] == exception && raw[offset] != '\0') ++offset;
+		}
+		void skipAll(char exceptionA, char exceptionB, size_t &offset)
+		{
+			while ((raw[offset] == exceptionA || raw[offset] == exceptionB)&& raw[offset] != '\0') ++offset;
+		}
+		void skipAll(char exceptionA, char exceptionB, char exceptionC, size_t &offset)
+		{
+			while ((raw[offset] == exceptionA || raw[offset] == exceptionB || raw[offset] == exceptionC) && raw[offset] != '\0') ++offset;
+		}
+		string gstrExcept(char exception, size_t &offset)
 		{
 			size_t a = offset, count = 0;
-			while (raw[offset] != '>' && raw[offset] != ' ' && raw[offset] != '\0') ++offset;
+			skipExcept(exception,offset);
 			count = offset - a;
 			return substr(raw + a, count);
 		}
-		string GetAttributeName(size_t &offset)
+		string gstrExcept(char exceptionA, char exceptionB, size_t &offset)
 		{
-			while (raw[offset] == ' ' && raw[offset] != '\0') ++offset;
 			size_t a = offset, count = 0;
-			while (raw[offset] != '=' && raw[offset] != '>' && raw[offset] != ' ' && raw[offset] != '\0') ++offset;
+			skipExcept(exceptionA, exceptionB, offset);
 			count = offset - a;
 			return substr(raw + a, count);
 		}
-		string GetAttributeValue(size_t &offset)
+		string gstrExcept(char exceptionA, char exceptionB, char exceptionC, size_t &offset)
 		{
-			if (raw[offset] == '>') return string("");//<textarea auto></textarse>,Attribute "auto" have no value
-			while (raw[offset] != '=' && raw[offset] != '\0') ++offset;
-			while ((raw[offset] == '=' || raw[offset] == ' ') && raw[offset] != '\0') ++offset;
-			while ((raw[offset] == '"' || raw[offset] == '\'') && raw[offset] != '\0') ++offset;
 			size_t a = offset, count = 0;
-			char ss = raw[offset - 1];//it should be ["] or [']
-			if (ss != '"' && ss != '\'')
-			{
-				while (raw[offset] != ' ' && raw[offset] != '>' && raw[offset] != '\0') ++offset;
-			}
-			else
-			{
-				while (raw[offset] != '\0')
-				{
-					if (raw[offset] == ss && raw[offset - 1] != '\\') break;
-					++offset;
-				}
-			}
+			skipExcept(exceptionA, exceptionB,exceptionC, offset);
+			count = offset - a;
+			return substr(raw + a, count);
+		}
+		string gstrExcept(char exceptionA, char exceptionB, char exceptionC, char exceptionD, size_t &offset)
+		{
+			size_t a = offset, count = 0;
+			skipExcept(exceptionA, exceptionB, exceptionC, exceptionD, offset);
 			count = offset - a;
 			return substr(raw + a, count);
 		}
