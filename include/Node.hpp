@@ -30,11 +30,19 @@ namespace Cyan
 		size_t txtOffset;// "[<]html>"
 		size_t count;//the number of characters counted from "[<]html>" to " </html[>] "
 	public:
+		Node()
+			:parent(nullptr),
+			brother(nullptr),
+			child(nullptr),
+			tagName(""),
+			attributes(nullptr),
+			txtOffset(0),
+			count(0) {}
 		Node(Node *parent_)
 			:parent(parent_), 
 			brother(nullptr), 
 			child(nullptr),
-			tagName(nullptr), 
+			tagName(""), 
 			attributes(nullptr), 
 			txtOffset(0),
 			count(0) {}
