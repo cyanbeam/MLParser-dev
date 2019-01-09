@@ -24,7 +24,7 @@ namespace Cyan
 			this->errorMsg = nullptr;
 		}
 	public:
-		MLParser() :raw(nullptr), root(nullptr), now(nullptr), errorMsg(nullptr) {}
+		MLParser() :raw(nullptr), root(nullptr), now(nullptr), errorMsg("") {}
 		MLParser(MLParser & MLP)
 		{
 			Copy(MLP);
@@ -35,7 +35,7 @@ namespace Cyan
 			return *this;
 		}
 		~MLParser() {}
-		bool Parse(string & html);
+		bool Parse(string html);
 		MLParser & operator[](string tagName);
 		MLParser & operator[](int n);
 		MLParser & XPath(string xpath);

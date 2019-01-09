@@ -8,7 +8,7 @@ namespace Cyan
 {
 	inline char *strcpy(const char *src)
 	{
-		size_t len = sizeof(src);
+		size_t len = strlen(src);
 		char *t = new char[len];
 		memcpy(t, src, len);
 		return t;
