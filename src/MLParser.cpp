@@ -18,6 +18,7 @@ namespace Cyan
 					lastToken->next = new Token;
 					lastToken = lastToken->next;
 					lastToken->type = EndTag;
+					lastToken->offset = offset;
 					offset += 2;//使得raw[offset]=tagName的第一位字符
 					lastToken->value = gstrExcept('>', offset);
 					continue;
@@ -79,6 +80,16 @@ namespace Cyan
 		NodeStack.push(root);
 		Attribute *lAttribute = nullptr;//记录上一个操作过的Node;
 
+		//****************************************
+		//因为设计错误，不得不使用该变量记录一些信息
+		//遇到LeftAngleBracket和EndTag会改变这个值（改为L_A_B或者EndTag）
+		//遇到RightAngleBracket会使用这个值：
+		//如果该变量(tType) == LeftAngleBracket
+		//那么RightAngleBracket就修改lNode的txtOffset字段为它自身的offset
+		//反之则不做任何操作
+		//****************************************
+		TokenType tType = Default;
+
 		Token *token = nullptr;
 		while ((token = SC.next()) != nullptr)
 		{
@@ -101,6 +112,7 @@ namespace Cyan
 				tNode->tagName = token->value;
 				pNode = lNode = tNode;
 				NodeStack.push(tNode);
+				tType = LeftAngleBracket;//见tType声明前注释
 				break;
 			case AttributeName:
 				if (lNode->attributes == nullptr)
@@ -127,21 +139,28 @@ namespace Cyan
 				while (tNode->tagName != token->value)
 				{
 					//下面的代码用于修复parent的指向错误
-					tNode->child->parent = tNode->parent;
+					if (tNode->child != nullptr)
+					{
+						tNode->child->parent = tNode->parent;
+					}
 					tNode = tNode->brother;
 					while (tNode != nullptr)
 					{
 						tNode->parent = tNode->parent->parent;
 						tNode = tNode->brother;
 					}
-
 					tNode = NodeStack.top();
 					NodeStack.pop();
 				}
+				tNode->count = token->offset - tNode->txtOffset;
 				pNode = NodeStack.top();
+				tType = EndTag;//见tType声明前注释
 				break;
 			case RightAngleBracket:
-				std::cout << ">" << std::endl;
+				if (tType == LeftAngleBracket)//见tType变量声明的注释
+				{
+					lNode->txtOffset = token->offset + 1;//token->offset指向右尖括号，+1改为指向内容的第一个字符
+				}
 				break;
 			default: 
 				break;
