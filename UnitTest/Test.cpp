@@ -14,8 +14,6 @@ int main(int argc, char **argv)
 	while ((n = fread_s(buffer, 256, 255, 1, fp)) >= 0)
 	{
 		if (strlen(buffer) == 0) break;
-		cout << buffer << endl;
-		//fflush(stdout);
 		s += buffer;
 		memset(buffer, '\0', 256);
 	}

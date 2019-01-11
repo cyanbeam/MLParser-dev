@@ -107,10 +107,6 @@ namespace Cyan
 		}
 		raw[k] = '\0';
 
-		for (size_t i = 0; i < strlen(raw); i++)
-		{
-			std::cout << raw[i];
-		}
 
 		//initial Scanner & Scan
 		Scanner SC = Scanner(raw);
@@ -178,7 +174,15 @@ namespace Cyan
 					{
 						if ((*it)->tagName == token->value) break;
 					}
-					if (it == NodeList.end()) break;//如果说tNode->tagName != token->value，就不会出现it == NodeList.end()
+					if (it == NodeList.end())//如果说tNode->tagName != token->value，就不会出现it == NodeList.end()
+					{
+						//说明这是凭空出现的一个End_Tag
+						//这个凭空出现的End_Tag不应该造成任何影响
+						//所以我们把弹出来的Node再加回去
+						NodeStack.push(tNode);
+						NodeList.push_back(tNode);
+						break;
+					}
 					//下面的代码用于修复parent的指向错误
 					if(tNode->child != nullptr)
 						tNode->child->MoveTo(tNode->parent);
