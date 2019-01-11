@@ -1,6 +1,8 @@
 #include "MLParser.h"
 #include <stack>
 #include <regex>
+#include <list>
+using std::list;
 using std::stack;
 using std::string;
 namespace Cyan
@@ -23,6 +25,7 @@ namespace Cyan
 					lastToken->offset = offset;
 					offset += 2;//使得raw[offset]=tagName的第一位字符
 					lastToken->value = gstrExcept('>', offset);
+					str2lwr(lastToken->value);
 					continue;
 				}
 				lastToken->next = new Token;
@@ -31,6 +34,7 @@ namespace Cyan
 				lastToken->offset = offset;
 				offset += 1;//使得raw[offset]=tagName的第一位字符
 				lastToken->value = gstrExcept(' ', '>', offset);
+				str2lwr(lastToken->value);
 				while (raw[offset] != '>')
 				{
 					skipAll(' ', offset);
@@ -38,21 +42,30 @@ namespace Cyan
 					lastToken = lastToken->next;
 					lastToken->type = AttributeName;
 					lastToken->value = gstrExcept('=', ' ', '>', offset);
-					skipAll(' ', offset);
-					skipAll('=', '"', '\'', offset);
+					skipAll(' ','=', offset);
+					//skipAll('=', offset);
 
+					//用单、双引号括起来的字符串里可能出现空格，为了正确分割
+					//应该再再次遇到单、双引号的时候停止，而不是一刀切的在 空格、单双引号 处直接停止
+					//也就是实现 将字符串视为一个整体来分割，即使字符串内包含空格（或单双引号）
+					char flag = raw[offset];//当前字符是等号(=)右边的第一个非空格字符  name = ["]value"
+					if (flag == '"' || flag == '\'') ++offset;//如果现在是引号，那么跳过，指向内容区
 					//html code:
 					///<text style="aaa" autofocus></text>
 					//The attribute "autofocus" will cause a error
 					//
 					//the next judge is to fix this bug.
-					if (raw[offset] == '>') break;
+					if (flag == '>') break;
 					
 					lastToken->next = new Token;
 					lastToken = lastToken->next;
 					lastToken->type = AttributeValue;
-					lastToken->value = gstrExcept('"', '\'', ' ', '>', offset);
+					if(flag == '"' || flag == '\'') 
+						lastToken->value = gstrExcept(flag, '>', offset);
+					else
+						lastToken->value = gstrExcept(' ', '>', offset);
 					skipAll('"', '\'', ' ', offset);
+					skipAll('/', offset);
 				}
 			}
 			if (raw[offset] == '>')
@@ -104,13 +117,13 @@ namespace Cyan
 		SC.Scan();
 
 		stack<Node *> NodeStack;
-		stack<Node *> t;
+		list<Node *> NodeList;
 		root = new Node();
 		Node *lNode = root;//记录上一个操作过的Node
 		Node *pNode = root;//下一个新节点的父亲节点
 		Node *tNode = root;//便于更新Node信息
 		NodeStack.push(root);
-		Attribute *lAttribute = nullptr;//记录上一个操作过的Node;
+		Attribute *lAttribute = nullptr;//记录上一个操作过的Attribute;
 
 		//****************************************
 		//因为设计错误，不得不使用该变量记录一些信息
@@ -132,7 +145,7 @@ namespace Cyan
 				tNode->tagName = token->value;
 				pNode = lNode = tNode;
 				NodeStack.push(tNode);
-				t.push(tNode);//用于测试
+				NodeList.push_back(tNode);
 				tType = LeftAngleBracket;//见tType声明前注释
 				break;
 			case AttributeName:
@@ -154,17 +167,27 @@ namespace Cyan
 				lAttribute->value = token->value;
 				break;
 			case EndTag:
-				if (NodeStack.size() <= 0)break;
+				if (NodeStack.size() <= 1)break;
 				tNode = NodeStack.top();
 				NodeStack.pop();
+				NodeList.pop_back();
 				while (tNode->tagName != token->value)
 				{
+					list<Node *>::iterator it;
+					for (it = NodeList.begin(); it != NodeList.end(); ++it)
+					{
+						if ((*it)->tagName == token->value) break;
+					}
+					if (it == NodeList.end()) break;//如果说tNode->tagName != token->value，就不会出现it == NodeList.end()
 					//下面的代码用于修复parent的指向错误
 					if(tNode->child != nullptr)
 						tNode->child->MoveTo(tNode->parent);
 
+					if (NodeStack.size() <= 1) 
+						break;
 					tNode = NodeStack.top();
 					NodeStack.pop();
+					NodeList.pop_back();
 				}
 				tNode->count = token->offset - tNode->txtOffset;
 				pNode = NodeStack.top();

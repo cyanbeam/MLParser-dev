@@ -22,4 +22,11 @@ namespace Cyan
 		delete[] t;
 		return s;
 	}
+	inline void str2lwr(string &m)
+	{
+		for (size_t i = 0; i < m.size(); i++)
+		{
+			m[i] = (char)tolower(m[i]);
+		}
+	}
 }
