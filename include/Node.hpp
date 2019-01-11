@@ -57,6 +57,53 @@ namespace Cyan
 			tNode->child = child->Copy(tNode);
 			return tNode;
 		}
+		Node *CreateChild()
+		{
+			if (child == nullptr)
+			{
+				child = new Node(this);
+				return child;
+			}
+			else
+			{
+				Node *tNode = child;
+				while (tNode->brother != nullptr)
+				{
+					tNode = tNode->brother;
+				}
+				tNode->brother = new Node(this);
+				return tNode->brother;
+			}
+		}
+		void AddChild(Node *Child_)
+		{
+			if (child == nullptr)
+			{
+				child = Child_;
+			}
+			else
+			{
+				Node *tNode = child;
+				while (tNode->brother != nullptr)
+				{
+					tNode = tNode->brother;
+				}
+				tNode->brother = Child_;
+			}
+		}
+		void MoveTo(Node *dst)
+		{
+			parent->child = nullptr;//我的父节点还以为我是它的子节点，先修正
+			dst->AddChild(this);//让dst指向自己
+			this->parent = dst;//让自己指向dst
+			//brother节点是通过“我”这个节点访问的，就不需要重复move过去了。
+			Node *tNode = brother;
+			while (tNode != nullptr)
+			{
+				tNode->parent = dst;
+				tNode = tNode->brother;
+			}
+		}
 		~Node() { delete attributes; delete brother; delete child; }
 		string GetAttribute(const string & AttributeName) const
 		{

@@ -104,6 +104,7 @@ namespace Cyan
 		SC.Scan();
 
 		stack<Node *> NodeStack;
+		stack<Node *> t;
 		root = new Node();
 		Node *lNode = root;//记录上一个操作过的Node
 		Node *pNode = root;//下一个新节点的父亲节点
@@ -127,22 +128,11 @@ namespace Cyan
 			switch (token->type)
 			{
 			case LeftAngleBracket:
-				if (pNode->child == nullptr)
-				{
-					tNode = pNode->child = new Node(pNode);
-				}
-				else
-				{
-					tNode = pNode->child;
-					while (tNode->brother != nullptr)
-					{
-						tNode = tNode->brother;
-					}
-					tNode = tNode->brother = new Node(pNode);
-				}
+				tNode = pNode->CreateChild();//Create a new child node
 				tNode->tagName = token->value;
 				pNode = lNode = tNode;
 				NodeStack.push(tNode);
+				t.push(tNode);//用于测试
 				tType = LeftAngleBracket;//见tType声明前注释
 				break;
 			case AttributeName:
@@ -170,16 +160,9 @@ namespace Cyan
 				while (tNode->tagName != token->value)
 				{
 					//下面的代码用于修复parent的指向错误
-					if (tNode->child != nullptr)
-					{
-						tNode->child->parent = tNode->parent;
-					}
-					tNode = tNode->brother;
-					while (tNode != nullptr)
-					{
-						tNode->parent = tNode->parent->parent;
-						tNode = tNode->brother;
-					}
+					if(tNode->child != nullptr)
+						tNode->child->MoveTo(tNode->parent);
+
 					tNode = NodeStack.top();
 					NodeStack.pop();
 				}
@@ -212,7 +195,14 @@ namespace Cyan
 			{
 				cout << "·";
 			}
-			cout << "<" << node->tagName << ">" << endl;
+			cout << "<" << node->tagName;
+			Attribute *tA = node->attributes;
+			while (tA != nullptr)
+			{
+				cout << ' ' << tA->name << "=\"" << tA->value << '"';
+				tA = tA->next;
+			}
+			cout << ">" << endl;
 			if (node->child != nullptr)
 			{
 				Debug_Show(node->child, count + 1);
