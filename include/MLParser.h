@@ -12,6 +12,7 @@ namespace Cyan
 		Node *root;
 		Node *now;//saving a location for query
 		string errorMsg;
+		void preprocess(string &m);
 		void Copy(MLParser & MLP)
 		{
 			if (MLP.raw == this->raw) return;
@@ -36,6 +37,7 @@ namespace Cyan
 		}
 		~MLParser() {}
 		bool Parse(string html);
+		void Debug_Show(Cyan::Node * node, size_t count);
 		MLParser & operator[](string tagName);
 		MLParser & operator[](int n);
 		MLParser & XPath(string xpath);

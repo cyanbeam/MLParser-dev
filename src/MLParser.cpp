@@ -1,6 +1,8 @@
 #include "MLParser.h"
 #include <stack>
+#include <regex>
 using std::stack;
+using std::string;
 namespace Cyan
 {
 	void Scanner::Scan()
@@ -40,12 +42,12 @@ namespace Cyan
 					skipAll('=', '"', '\'', offset);
 
 					//html code:
-					///<text style="aaa" auto></text>
-					//The attribute "auto" will cause a error
+					///<text style="aaa" autofocus></text>
+					//The attribute "autofocus" will cause a error
 					//
 					//the next judge is to fix this bug.
 					if (raw[offset] == '>') break;
-
+					
 					lastToken->next = new Token;
 					lastToken = lastToken->next;
 					lastToken->type = AttributeValue;
@@ -64,9 +66,38 @@ namespace Cyan
 		}
 		now = root;
 	}
+	void MLParser::preprocess(string &m)
+	{
+		std::regex exp1("<script([\\S\\s]+?)<\\/script>");
+		m = std::regex_replace(m, exp1, "");
+		std::regex exp2("<!--([\\S\\s]+?)-->");
+		m = std::regex_replace(m, exp2, "");
+		std::regex exp3("<!([\\S\\s]+?)>");
+		m = std::regex_replace(m, exp3, "");
+		std::regex exp4("<style([\\S\\s]+?)<\\/style>");
+		m = std::regex_replace(m, exp4, "");
+	}
 	bool MLParser::Parse(string html)
 	{
+		preprocess(html);
 		raw = Cyan::strcpy(html.data());//copy data
+
+		size_t i, k;
+		for (i = k = 0;raw[i] != '\0'; ++i)
+		{
+			if (raw[i] == '\n' || raw[i] == '\r' || raw[i] == '\t') {}
+			else
+			{
+				raw[k] = raw[i];
+				k = k + 1;
+			}
+		}
+		raw[k] = '\0';
+
+		for (size_t i = 0; i < strlen(raw); i++)
+		{
+			std::cout << raw[i];
+		}
 
 		//initial Scanner & Scan
 		Scanner SC = Scanner(raw);
@@ -167,6 +198,34 @@ namespace Cyan
 			}
 		}
 		now = root;
+		Debug_Show(root, 0);
+
 		return true;
+	}
+	void MLParser::Debug_Show(Cyan::Node *node, size_t count)
+	{
+		using std::cout;
+		using std::endl;
+		if (node != nullptr)
+		{
+			for (size_t i = 0; i < count; ++i)
+			{
+				cout << "¡¤";
+			}
+			cout << "<" << node->tagName << ">" << endl;
+			if (node->child != nullptr)
+			{
+				Debug_Show(node->child, count + 1);
+			}
+			for (size_t i = 0; i < count; ++i)
+			{
+				cout << "¡¤";
+			}
+			cout << "</" << node->tagName << ">" << endl;
+			if (node->brother != nullptr)
+			{
+				Debug_Show(node->brother, count);
+			}
+		}
 	}
 }

@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include <exception>
 using std::string;
 //这里保存一些有效但是不安全的代码
 //使用这些函数需要小心
@@ -8,7 +9,7 @@ namespace Cyan
 {
 	inline char *strcpy(const char *src)
 	{
-		size_t len = strlen(src);
+		size_t len = strlen(src) + 1;
 		char *t = new char[len];
 		memcpy(t, src, len);
 		return t;
