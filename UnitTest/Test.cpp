@@ -7,7 +7,7 @@ int main(int argc, char **argv)
 {
 	char buffer[256];
 	FILE *fp;
-	fopen_s(&fp, "G:\\test.html", "rb+");
+	fopen_s(&fp, "G:\\test2.html", "rb+");
 	string s;
 	size_t n;
 	memset(buffer, '\0', 256);

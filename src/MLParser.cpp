@@ -221,7 +221,7 @@ namespace Cyan
 		{
 			for (size_t i = 0; i < count; ++i)
 			{
-				cout << '，';
+				cout << "，";
 			}
 			cout << '<' << node->tagName;
 			if (printAttribute)
@@ -244,7 +244,7 @@ namespace Cyan
 			}
 			for (size_t i = 0; i < count; ++i)
 			{
-				cout << '，';
+				cout << "，";
 			}
 			cout << "</" << node->tagName << '>' << endl;
 			if (node->brother != nullptr)
