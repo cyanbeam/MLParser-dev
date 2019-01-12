@@ -38,7 +38,28 @@ namespace Cyan
 		~MLParser() {}
 		bool Parse(string html);
 		void Print(Cyan::Node * node, size_t count, bool printAttribute);
-		MLParser & operator[](string tagName);
+		MLParser & operator[](string tagName)
+		{
+			if (tagName == "") { now = root; return; }
+			if (now->child != nullptr)
+			{
+				if (now->child->tagName == tagName)
+				{
+					now = now->child;
+					return;
+				}
+				Node *tNode = now->child->brother;
+				while (tNode != nullptr)
+				{
+					if (tNode->tagName == tagName)
+					{
+						now = tNode;
+						return;
+					}
+					tNode = tNode->brother;
+				}
+			}
+		}
 		MLParser & operator[](int n);
 		MLParser & XPath(string xpath);
 		string GetTagName() const;
