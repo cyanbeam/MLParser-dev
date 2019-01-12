@@ -209,11 +209,9 @@ namespace Cyan
 			}
 		}
 		now = root;
-		Print(root, 0, true);
-
 		return true;
 	}
-	void MLParser::Print(Cyan::Node *node, size_t count,bool printAttribute)
+	void MLParser::Print(Cyan::Node *node, size_t count,bool printAttribute,bool printBrother)
 	{
 		using std::cout;
 		using std::endl;
@@ -233,23 +231,19 @@ namespace Cyan
 					tA = tA->next;
 				}
 			}
-			else
-			{
-				cout << '<' << endl;;
-			}
 			cout << '>' << endl;
 			if (node->child != nullptr)
 			{
-				Print(node->child, count + 1,printAttribute);
+				Print(node->child, count + 1, printAttribute, true);
 			}
 			for (size_t i = 0; i < count; ++i)
 			{
 				cout << "¡¤";
 			}
 			cout << "</" << node->tagName << '>' << endl;
-			if (node->brother != nullptr)
+			if (printBrother && node->brother != nullptr)
 			{
-				Print(node->brother, count,printAttribute);
+				Print(node->brother, count, printAttribute, printBrother);
 			}
 		}
 	}

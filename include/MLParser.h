@@ -12,6 +12,7 @@ namespace Cyan
 		Node *root;
 		Node *now;//saving a location for query
 		string errorMsg;
+		void Print(Cyan::Node * node, size_t count, bool printAttribute, bool printBrother);
 		void preprocess(string &m);
 		void Copy(MLParser & MLP)
 		{
@@ -37,7 +38,10 @@ namespace Cyan
 		}
 		~MLParser() {}
 		bool Parse(string html);
-		void Print(Cyan::Node * node, size_t count, bool printAttribute);
+		void PrintTree(bool printAttributes = false)
+		{
+			Print(now, 0, printAttributes, false);
+		}
 		MLParser & operator[](string tagName)
 		{
 			if (tagName == "") { now = root; return *this; }
