@@ -66,7 +66,27 @@ namespace Cyan
 			SetErrMsg("Can't find <" + tagName + ">");
 			return *this;
 		}
-		MLParser & operator[](int n);
+		MLParser & operator[](unsigned short n)
+		{
+			if (n == 0) { return *this; }
+			unsigned short i = 0;
+			Node *tNode = now->brother;
+			while (tNode != nullptr)
+			{
+				if (tNode->tagName == now->tagName)
+				{
+					++i;
+				}
+				if (i == n)
+				{
+					now = tNode;
+					return *this;
+				}
+				tNode = tNode->brother;
+			}
+			SetErrMsg("Can't find <" + now->tagName + ">[" + std::to_string(n) + "]");
+			return *this;
+		}
 		MLParser & XPath(string xpath);
 		string GetTagName() const
 		{

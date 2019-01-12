@@ -20,8 +20,8 @@ int main(int argc, char **argv)
 	fclose(fp);
 	MLParser ml;
 	ml.Parse(s);
-	ml["html"]["body"].PrintTree();
-
+	string m = ml["html"]["body"]["ul"]["li"][2]["a"].GetAttribute("data-title");
+	cout << m << endl;
 	ml.Dispose();
 	getchar();
 	return 0;
