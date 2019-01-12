@@ -20,7 +20,7 @@ int main(int argc, char **argv)
 	fclose(fp);
 	MLParser ml;
 	ml.Parse(s);
-	string m = ml["html"]["head"]["title"].GetTagName();
+	string m = ml["html"]["head"]["title"].GetInner();
 	cout << m << endl;
 	ml.Dispose();
 	getchar();

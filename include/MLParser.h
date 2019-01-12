@@ -75,10 +75,16 @@ namespace Cyan
 			{
 				SetErrMsg("Can't find Attribute '" + AttributeName + "'");
 			}
+			now = root;
 			return *ps;
 		}
 		string GetContent() const;//return content removed tags
-		string GetInner() const;//return raw inner text
+		string GetInner()
+		{
+			string t =  substr(raw + now->txtOffset, now->count);
+			now = root;
+			return t;
+		}
 		string GetErrorMsg() const
 		{
 			return errorMsg;
