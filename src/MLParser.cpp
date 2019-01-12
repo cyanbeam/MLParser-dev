@@ -33,7 +33,7 @@ namespace Cyan
 				lastToken->type = LeftAngleBracket;
 				lastToken->offset = offset;
 				offset += 1;//使得raw[offset]=tagName的第一位字符
-				lastToken->value = gstrExcept(' ', '>', offset);
+				lastToken->value = gstrExcept(' ', '/', '>', offset);
 				str2lwr(lastToken->value);
 				while (raw[offset] != '>')
 				{
@@ -60,8 +60,8 @@ namespace Cyan
 					lastToken->next = new Token;
 					lastToken = lastToken->next;
 					lastToken->type = AttributeValue;
-					if(flag == '"' || flag == '\'') 
-						lastToken->value = gstrExcept(flag, '>', offset);
+					if (flag == '"' || flag == '\'')
+						lastToken->value = gstrExcept(flag, offset);
 					else
 						lastToken->value = gstrExcept(' ', '>', offset);
 					skipAll('"', '\'', ' ', offset);

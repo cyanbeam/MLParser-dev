@@ -102,7 +102,7 @@ namespace Cyan
 			now = root;
 			return *ps;
 		}
-		string GetContent() const;//return content removed tags
+		string GetContent() const;
 		string GetInner()
 		{
 			string t =  substr(raw + now->txtOffset, now->count);

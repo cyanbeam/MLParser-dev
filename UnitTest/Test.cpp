@@ -7,7 +7,7 @@ int main(int argc, char **argv)
 {
 	char buffer[256];
 	FILE *fp;
-	fopen_s(&fp, "G:\\test2.html", "rb+");
+	fopen_s(&fp, "G:\\test3.html", "rb+");
 	string s;
 	size_t n;
 	memset(buffer, '\0', 256);
@@ -20,8 +20,7 @@ int main(int argc, char **argv)
 	fclose(fp);
 	MLParser ml;
 	ml.Parse(s);
-	string m = ml["html"]["body"]["ul"]["li"][2]["a"].GetAttribute("data-title");
-	cout << m << endl;
+	ml.PrintTree(true);
 	ml.Dispose();
 	getchar();
 	return 0;
