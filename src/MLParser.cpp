@@ -115,6 +115,7 @@ namespace Cyan
 		stack<Node *> NodeStack;
 		list<Node *> NodeList;
 		root = new Node();
+		root->tagName = "_root_";
 		Node *lNode = root;//记录上一个操作过的Node
 		Node *pNode = root;//下一个新节点的父亲节点
 		Node *tNode = root;//便于更新Node信息
@@ -208,11 +209,11 @@ namespace Cyan
 			}
 		}
 		now = root;
-		Debug_Show(root, 0);
+		Print(root, 0, true);
 
 		return true;
 	}
-	void MLParser::Debug_Show(Cyan::Node *node, size_t count)
+	void MLParser::Print(Cyan::Node *node, size_t count,bool printAttribute)
 	{
 		using std::cout;
 		using std::endl;
@@ -220,28 +221,35 @@ namespace Cyan
 		{
 			for (size_t i = 0; i < count; ++i)
 			{
-				cout << "·";
+				cout << '·';
 			}
-			cout << "<" << node->tagName;
-			Attribute *tA = node->attributes;
-			while (tA != nullptr)
+			cout << '<' << node->tagName;
+			if (printAttribute)
 			{
-				cout << ' ' << tA->name << "=\"" << tA->value << '"';
-				tA = tA->next;
+				Attribute *tA = node->attributes;
+				while (tA != nullptr)
+				{
+					cout << ' ' << tA->name << "=\"" << tA->value << '"';
+					tA = tA->next;
+				}
 			}
-			cout << ">" << endl;
+			else
+			{
+				cout << '<' << endl;;
+			}
+			cout << '>' << endl;
 			if (node->child != nullptr)
 			{
-				Debug_Show(node->child, count + 1);
+				Print(node->child, count + 1,printAttribute);
 			}
 			for (size_t i = 0; i < count; ++i)
 			{
-				cout << "·";
+				cout << '·';
 			}
-			cout << "</" << node->tagName << ">" << endl;
+			cout << "</" << node->tagName << '>' << endl;
 			if (node->brother != nullptr)
 			{
-				Debug_Show(node->brother, count);
+				Print(node->brother, count,printAttribute);
 			}
 		}
 	}

@@ -37,7 +37,7 @@ namespace Cyan
 		}
 		~MLParser() {}
 		bool Parse(string html);
-		void Debug_Show(Cyan::Node * node, size_t count);
+		void Print(Cyan::Node * node, size_t count, bool printAttribute);
 		MLParser & operator[](string tagName);
 		MLParser & operator[](int n);
 		MLParser & XPath(string xpath);
