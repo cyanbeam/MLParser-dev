@@ -40,13 +40,13 @@ namespace Cyan
 		void Print(Cyan::Node * node, size_t count, bool printAttribute);
 		MLParser & operator[](string tagName)
 		{
-			if (tagName == "") { now = root; return; }
+			if (tagName == "") { now = root; return *this; }
 			if (now->child != nullptr)
 			{
 				if (now->child->tagName == tagName)
 				{
 					now = now->child;
-					return;
+					return *this;
 				}
 				Node *tNode = now->child->brother;
 				while (tNode != nullptr)
@@ -54,11 +54,13 @@ namespace Cyan
 					if (tNode->tagName == tagName)
 					{
 						now = tNode;
-						return;
+						return *this;
 					}
 					tNode = tNode->brother;
 				}
 			}
+			SetErrMsg("Can't find <" + tagName + ">");
+			return *this;
 		}
 		MLParser & operator[](int n);
 		MLParser & XPath(string xpath);
@@ -71,7 +73,7 @@ namespace Cyan
 			string *ps = now->GetAttribute(AttributeName);
 			if (ps == nullptr)
 			{
-				SetErrMsg("Can't find AttributeName.");
+				SetErrMsg("Can't find Attribute '" + AttributeName + "'");
 			}
 			return *ps;
 		}
@@ -81,7 +83,7 @@ namespace Cyan
 		{
 			return errorMsg;
 		}
-		void SetErrMsg(const char *msg)
+		void SetErrMsg(string msg)
 		{
 			errorMsg = msg;
 		}
@@ -89,7 +91,6 @@ namespace Cyan
 		{
 			delete[] raw;
 			delete root;
-			delete now;
 		}
 	};
 	enum TokenType

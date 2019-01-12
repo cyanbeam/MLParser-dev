@@ -18,9 +18,11 @@ int main(int argc, char **argv)
 		memset(buffer, '\0', 256);
 	}
 	fclose(fp);
-	MLParser *ml = new MLParser();
-	ml->Parse(s);
-
+	MLParser ml;
+	ml.Parse(s);
+	string m = ml["html"]["head"]["title"].GetTagName();
+	cout << m << endl;
+	ml.Dispose();
 	getchar();
 	return 0;
 }
