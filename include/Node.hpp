@@ -105,14 +105,14 @@ namespace Cyan
 			}
 		}
 		~Node() { delete attributes; delete brother; delete child; }
-		string GetAttribute(const string & AttributeName) const
+		string *GetAttribute(const string & AttributeName) const
 		{
 			Attribute *tA = attributes;
 			while (tA != nullptr)
 			{
 				if (tA->name == AttributeName)
 				{
-					return tA->value;
+					return &tA->value;
 				}
 				tA = tA->next;
 			}

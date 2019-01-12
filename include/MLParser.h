@@ -62,13 +62,28 @@ namespace Cyan
 		}
 		MLParser & operator[](int n);
 		MLParser & XPath(string xpath);
-		string GetTagName() const;
-		string GetAttribute(const string & AttributeName) const;
+		string GetTagName() const
+		{
+			return now->tagName;
+		}
+		string GetAttribute(const string & AttributeName) 
+		{
+			string *ps = now->GetAttribute(AttributeName);
+			if (ps == nullptr)
+			{
+				SetErrMsg("Can't find AttributeName.");
+			}
+			return *ps;
+		}
 		string GetContent() const;//return content removed tags
 		string GetInner() const;//return raw inner text
 		string GetErrorMsg() const
 		{
 			return errorMsg;
+		}
+		void SetErrMsg(const char *msg)
+		{
+			errorMsg = msg;
 		}
 		void Dispose()
 		{
