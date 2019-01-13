@@ -29,23 +29,6 @@ namespace Cyan
 		Attribute *attributes;
 		size_t txtOffset;// "[<]html>"
 		size_t count;//the number of characters counted from "[<]html>" to " </html[>] "
-	public:
-		Node()
-			:parent(nullptr),
-			brother(nullptr),
-			child(nullptr),
-			tagName(""),
-			attributes(nullptr),
-			txtOffset(0),
-			count(0) {}
-		Node(Node *parent_)
-			:parent(parent_), 
-			brother(nullptr), 
-			child(nullptr),
-			tagName(""), 
-			attributes(nullptr), 
-			txtOffset(0),
-			count(0) {}
 		Node *Copy(Node *parent_)
 		{
 			Node *tNode = new Node(parent_);
@@ -104,8 +87,43 @@ namespace Cyan
 				tNode = tNode->brother;
 			}
 		}
+		Attribute *AddAttribute(string name, string value)
+		{
+			if (attributes == nullptr)
+			{
+				attributes = new Attribute(name, value);
+				return attributes;
+			}
+			else
+			{
+				Attribute *tA = attributes;
+				while (tA->next != nullptr)
+				{
+					tA = tA->next;
+				}
+				tA->next = new Attribute(name, value);
+				return tA->next;
+			}
+		}
+	public:
+		Node()
+			:parent(nullptr),
+			brother(nullptr),
+			child(nullptr),
+			tagName(""),
+			attributes(nullptr),
+			txtOffset(0),
+			count(0) {}
+		Node(Node *parent_)
+			:parent(parent_), 
+			brother(nullptr), 
+			child(nullptr),
+			tagName(""), 
+			attributes(nullptr), 
+			txtOffset(0),
+			count(0) {}
 		~Node() { delete attributes; delete brother; delete child; }
-		string *GetAttribute(const string & AttributeName) const
+		string *GetAttribute(const string & AttributeName) const//ÐèÒªÐÞ¸Ä
 		{
 			Attribute *tA = attributes;
 			while (tA != nullptr)

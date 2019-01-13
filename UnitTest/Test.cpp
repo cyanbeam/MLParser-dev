@@ -20,7 +20,7 @@ int main(int argc, char **argv)
 	fclose(fp);
 	MLParser ml;
 	ml.Parse(s);
-	ml.PrintTree(true);
+	ml.PrintTree(false);
 	ml.Dispose();
 	getchar();
 	return 0;

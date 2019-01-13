@@ -146,19 +146,7 @@ namespace Cyan
 				tType = LeftAngleBracket;//¼ûtTypeÉùÃ÷Ç°×¢ÊÍ
 				break;
 			case AttributeName:
-				if (lNode->attributes == nullptr)
-				{
-					lAttribute =  lNode->attributes = new Attribute(token->value, "");
-				}
-				else
-				{
-					lAttribute = lNode->attributes;
-					while (lAttribute->next != nullptr)
-					{
-						lAttribute = lAttribute->next;
-					}
-					lAttribute = lAttribute->next = new Attribute(token->value, "");
-				}
+				lAttribute = lNode->AddAttribute(token->value, "");
 				break;
 			case AttributeValue:
 				lAttribute->value = token->value;
