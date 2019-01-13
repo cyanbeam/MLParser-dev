@@ -1,15 +1,15 @@
 #include "MLParser.h"
 #include <iostream>
 
-#define CRTDBG_MAP_ALLOC  
-#include <stdlib.h>  
-#include <crtdbg.h>  
+//#define CRTDBG_MAP_ALLOC  
+//#include <stdlib.h>  
+//#include <crtdbg.h>  
 //#include <gtest\gtest.h>
 using namespace std;
 using namespace Cyan;
 int main(int argc, char **argv)
 {
-	_CrtSetBreakAlloc(188);
+	//_CrtSetBreakAlloc(188);
 	char buffer[256];
 	FILE *fp;
 	fopen_s(&fp, "G:\\test.html", "rb+");
@@ -37,6 +37,6 @@ int main(int argc, char **argv)
 	}
 	ml.Dispose();
 	getchar();
-	_CrtDumpMemoryLeaks();
+	//_CrtDumpMemoryLeaks();
 	return 0;
 }
