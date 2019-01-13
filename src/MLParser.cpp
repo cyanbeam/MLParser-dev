@@ -81,6 +81,7 @@ namespace Cyan
 	}
 	void MLParser::preprocess(string &m)
 	{
+		//以下代码用于去除script标签、style标签与注释
 		std::regex exp1("<script([\\S\\s]+?)<\\/script>");
 		m = std::regex_replace(m, exp1, "");
 		std::regex exp2("<!--([\\S\\s]+?)-->");
@@ -89,14 +90,11 @@ namespace Cyan
 		m = std::regex_replace(m, exp3, "");
 		std::regex exp4("<style([\\S\\s]+?)<\\/style>");
 		m = std::regex_replace(m, exp4, "");
-	}
-	bool MLParser::Parse(string html)
-	{
-		preprocess(html);
-		raw = Cyan::strcpy(html.data());//copy data
 
+		raw = Cyan::strcpy(m.data());
+		//以下代码用于去除\n \r \t
 		size_t i, k;
-		for (i = k = 0;raw[i] != '\0'; ++i)
+		for (i = k = 0; raw[i] != '\0'; ++i)
 		{
 			if (raw[i] == '\n' || raw[i] == '\r' || raw[i] == '\t') {}
 			else
@@ -106,8 +104,10 @@ namespace Cyan
 			}
 		}
 		raw[k] = '\0';
-
-
+	}
+	bool MLParser::Parse(string html)
+	{
+		preprocess(html);
 		//initial Scanner & Scan
 		Scanner SC = Scanner(raw);
 		SC.Scan();
@@ -163,8 +163,9 @@ namespace Cyan
 					{
 						if ((*it)->tagName == token->value) break;
 					}
-					if (it == NodeList.end())//如果说tNode->tagName != token->value，就不会出现it == NodeList.end()
+					if (it == NodeList.end())
 					{
+						//如果说tNode->tagName != token->value，就不会出现it == NodeList.end()
 						//说明这是凭空出现的一个End_Tag
 						//这个凭空出现的End_Tag不应该造成任何影响
 						//所以我们把弹出来的Node再加回去
@@ -175,7 +176,6 @@ namespace Cyan
 					//下面的代码用于修复parent的指向错误
 					if(tNode->child != nullptr)
 						tNode->child->MoveTo(tNode->parent);
-
 					if (NodeStack.size() <= 1) 
 						break;
 					tNode = NodeStack.top();
