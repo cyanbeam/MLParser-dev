@@ -6,10 +6,12 @@ namespace Cyan
 {
 	class MLParser;
 	class Node;
+	class Result;
 	class Attribute
 	{
 		friend class Node;
 		friend class MLParser;
+		friend class Result;
 	private:
 		string name;
 		string value;
@@ -21,6 +23,7 @@ namespace Cyan
 	class Node
 	{
 		friend class MLParser;
+		friend class Result;
 	private:
 		Node *parent;
 		Node *brother;

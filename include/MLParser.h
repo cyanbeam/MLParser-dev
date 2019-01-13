@@ -9,6 +9,36 @@ using std::make_pair;
 namespace Cyan
 {
 	typedef multimap<string, Node *> StrNode;
+	class Result
+	{
+	friend class MLParser;
+	private:
+		char *raw;
+		Node *node;
+		Result(char *raw_, Node *node_) :raw(raw_),node(node_) {}
+	public:
+		string GetTagName()
+		{
+			return node->tagName;
+		}
+		bool FindAttribute(const string & AttributeName, string & AttributeValue)
+		{
+			string *ps = node->GetAttribute(AttributeName);
+			if (ps == nullptr)
+			{
+				AttributeValue = "";
+				return false;
+			}
+			AttributeValue = string(*ps);
+			return true;
+		}
+		string GetContent() const;
+		string GetInner()
+		{
+			return substr(raw + node->txtOffset, node->count);
+		}
+		~Result() {}
+	};
 	class MLParser
 	{
 	private:
