@@ -1,10 +1,14 @@
 #pragma once
 #include "Node.hpp"
 #include <string>
+#include <map>
 //#include <gtest\gtest.h>
+using std::multimap;
 using std::string;
+using std::make_pair;
 namespace Cyan
 {
+	typedef multimap<string, Node *> StrNode;
 	class MLParser
 	{
 	private:
@@ -12,6 +16,7 @@ namespace Cyan
 		Node *root;
 		Node *now;//saving a location for query
 		string errorMsg;
+		StrNode TagName;//存储 <tagname,Node*> 元组，用于模糊查询
 		void Print(Cyan::Node * node, size_t count, bool printAttribute, bool printBrother);
 		void preprocess(string &m);
 		void Copy(MLParser & MLP)
@@ -24,6 +29,10 @@ namespace Cyan
 			this->root = MLP.root->Copy(nullptr);
 			this->now = root;
 			this->errorMsg = nullptr;
+		}
+		void AddTag(Node *node)
+		{
+			TagName.insert(make_pair(node->tagName, node));
 		}
 	public:
 		MLParser() :raw(nullptr), root(nullptr), now(nullptr), errorMsg("") {}
@@ -88,9 +97,11 @@ namespace Cyan
 			return *this;
 		}
 		MLParser & XPath(string xpath);
-		string GetTagName() const
+		string GetTagName() 
 		{
-			return now->tagName;
+			string t = now->tagName;
+			now = root;
+			return t;
 		}
 		string GetAttribute(const string & AttributeName) 
 		{
