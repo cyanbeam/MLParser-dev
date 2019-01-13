@@ -70,6 +70,7 @@ namespace Cyan
 				tNode = pNode->CreateChild();//Create a new child node
 				tNode->tagName = token->value;
 				pNode = lNode = tNode;
+				AddTag(tNode);
 				NodeStack.push(tNode);
 				NodeList.push_back(tNode);
 				tType = LeftAngleBracket;//¼ûtTypeÉùÃ÷Ç°×¢ÊÍ
@@ -212,5 +213,15 @@ namespace Cyan
 		}
 		SetErrMsg("Can't find <" + now->tagName + ">[" + std::to_string(n) + "]");
 		return *this;
+	}
+	Results MLParser::SearchByTagName(const string & name)
+	{
+		StrNode::iterator it;
+		list<Result> result;
+		for (it = TagName.lower_bound(name); it != TagName.upper_bound(name); ++it)
+		{
+			result.push_back(Result(raw, it->second));
+		}
+		return result;
 	}
 }

@@ -7,7 +7,7 @@ int main(int argc, char **argv)
 {
 	char buffer[256];
 	FILE *fp;
-	fopen_s(&fp, "G:\\test3.html", "rb+");
+	fopen_s(&fp, "G:\\test2.html", "rb+");
 	string s;
 	size_t n;
 	memset(buffer, '\0', 256);
@@ -21,6 +21,11 @@ int main(int argc, char **argv)
 	MLParser ml;
 	ml.Parse(s);
 	ml.PrintTree(false);
+	Results rs = ml.SearchByTagName("a");
+	for (auto result : rs)
+	{
+		cout << result.GetInner() << endl;
+	}
 	ml.Dispose();
 	getchar();
 	return 0;

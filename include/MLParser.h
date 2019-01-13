@@ -10,6 +10,7 @@ using std::make_pair;
 namespace Cyan
 {
 	typedef multimap<string, Node *> StrNode;
+	typedef list<Result> Results;
 	class MLParser
 	{
 	private:
@@ -78,7 +79,7 @@ namespace Cyan
 			now = root;
 			return t;
 		}
-		list<Result> SearchByTagName(const string &name);
+		Results SearchByTagName(const string &name);
 		string GetErrorMsg() const
 		{
 			return errorMsg;
