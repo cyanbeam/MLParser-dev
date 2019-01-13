@@ -9,36 +9,6 @@ using std::make_pair;
 namespace Cyan
 {
 	typedef multimap<string, Node *> StrNode;
-	class Result
-	{
-	friend class MLParser;
-	private:
-		char *raw;
-		Node *node;
-		Result(char *raw_, Node *node_) :raw(raw_),node(node_) {}
-	public:
-		string GetTagName()
-		{
-			return node->tagName;
-		}
-		bool FindAttribute(const string & AttributeName, string & AttributeValue)
-		{
-			string *ps = node->GetAttribute(AttributeName);
-			if (ps == nullptr)
-			{
-				AttributeValue = "";
-				return false;
-			}
-			AttributeValue = string(*ps);
-			return true;
-		}
-		string GetContent() const;
-		string GetInner()
-		{
-			return substr(raw + node->txtOffset, node->count);
-		}
-		~Result() {}
-	};
 	class MLParser
 	{
 	private:
@@ -167,103 +137,34 @@ namespace Cyan
 			delete root;
 		}
 	};
-	enum TokenType
+	class Result
 	{
-		Default,
-		LeftAngleBracket,
-		EndTag,
-		AttributeName,
-		AttributeValue,
-		RightAngleBracket
-	};
-	struct Token
-	{
-		TokenType type = Default;
-		size_t offset = 0;
-		string value = "";
-		Token *next = nullptr;
-		~Token()
-		{
-			delete next;
-		}
-	};
-	class Scanner
-	{
-//#ifdef _DEBUG
-//		FRIEND_TEST(Scanner_Test, GetAttributeValue_Test);
-//#endif
+		friend class MLParser;
 	private:
-		const char *raw;
-		Token *root;
-		Token *now;
-		void skipExcept(char exception, size_t &offset)
-		{
-			while (raw[offset] != exception && raw[offset] != '\0') ++offset;
-		}
-		void skipExcept(char exceptionA, char exceptionB, size_t &offset)
-		{
-			while (raw[offset] != exceptionA && raw[offset] != exceptionB && raw[offset] != '\0') ++offset;
-		}
-		void skipExcept(char exceptionA, char exceptionB, char exceptionC, size_t &offset)
-		{
-			while (raw[offset] != exceptionA && raw[offset] != exceptionB && raw[offset] != exceptionC && raw[offset] != '\0') ++offset;
-		}
-		void skipExcept(char exceptionA, char exceptionB, char exceptionC, char exceptionD, size_t &offset)
-		{
-			while (raw[offset] != exceptionA && raw[offset] != exceptionB && raw[offset] != exceptionC && raw[offset] != exceptionD && raw[offset] != '\0') ++offset;
-		}
-		void skipAll(char exception, size_t &offset)
-		{
-			while (raw[offset] == exception && raw[offset] != '\0') ++offset;
-		}
-		void skipAll(char exceptionA, char exceptionB, size_t &offset)
-		{
-			while ((raw[offset] == exceptionA || raw[offset] == exceptionB)&& raw[offset] != '\0') ++offset;
-		}
-		void skipAll(char exceptionA, char exceptionB, char exceptionC, size_t &offset)
-		{
-			while ((raw[offset] == exceptionA || raw[offset] == exceptionB || raw[offset] == exceptionC) && raw[offset] != '\0') ++offset;
-		}
-		string gstrExcept(char exception, size_t &offset)
-		{
-			size_t a = offset, count = 0;
-			skipExcept(exception,offset);
-			count = offset - a;
-			return substr(raw + a, count);
-		}
-		string gstrExcept(char exceptionA, char exceptionB, size_t &offset)
-		{
-			size_t a = offset, count = 0;
-			skipExcept(exceptionA, exceptionB, offset);
-			count = offset - a;
-			return substr(raw + a, count);
-		}
-		string gstrExcept(char exceptionA, char exceptionB, char exceptionC, size_t &offset)
-		{
-			size_t a = offset, count = 0;
-			skipExcept(exceptionA, exceptionB,exceptionC, offset);
-			count = offset - a;
-			return substr(raw + a, count);
-		}
-		string gstrExcept(char exceptionA, char exceptionB, char exceptionC, char exceptionD, size_t &offset)
-		{
-			size_t a = offset, count = 0;
-			skipExcept(exceptionA, exceptionB, exceptionC, exceptionD, offset);
-			count = offset - a;
-			return substr(raw + a, count);
-		}
+		char *raw;
+		Node *node;
+		Result(char *raw_, Node *node_) :raw(raw_), node(node_) {}
 	public:
-		Scanner(const char *content) :raw(content), root(nullptr), now(nullptr)
+		string GetTagName()
 		{
-			root = new Token;
+			return node->tagName;
 		}
-		~Scanner() { delete root; }
-		void Scan();
-		Token *next()
+		bool FindAttribute(const string & AttributeName, string & AttributeValue)
 		{
-			now = now->next;
-			return now;
+			string *ps = node->GetAttribute(AttributeName);
+			if (ps == nullptr)
+			{
+				AttributeValue = "";
+				return false;
+			}
+			AttributeValue = string(*ps);
+			return true;
 		}
-
+		string GetContent() const;
+		string GetInner()
+		{
+			return substr(raw + node->txtOffset, node->count);
+		}
+		~Result() {}
 	};
 }

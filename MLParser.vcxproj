@@ -155,10 +155,12 @@
   <ItemGroup>
     <ClInclude Include="include\MLParser.h" />
     <ClInclude Include="include\Node.hpp" />
+    <ClInclude Include="include\Scanner.hpp" />
     <ClInclude Include="include\Utility.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\MLParser.cpp" />
+    <ClCompile Include="src\Scanner.cpp" />
     <ClCompile Include="UnitTest\Scanner_Test.cpp" />
     <ClCompile Include="UnitTest\Test.cpp" />
   </ItemGroup>
