@@ -70,13 +70,14 @@ namespace Cyan
 				tNode = pNode->CreateChild();//Create a new child node
 				tNode->tagName = token->value;
 				pNode = lNode = tNode;
-				AddTag(tNode);
+				AddTag(tNode);//用于模糊搜索
 				NodeStack.push(tNode);
 				NodeList.push_back(tNode);
 				tType = LeftAngleBracket;//见tType声明前注释
 				break;
 			case AttributeName:
 				lAttribute = lNode->AddAttribute(token->value, "");
+				AddAttribute(token->value, lNode);//用于模糊搜索
 				break;
 			case AttributeValue:
 				lAttribute->value = token->value;
@@ -218,10 +219,34 @@ namespace Cyan
 	{
 		StrNode::iterator it;
 		list<Result> result;
-		for (it = TagName.lower_bound(name); it != TagName.upper_bound(name); ++it)
+		for (it = sTagName.lower_bound(name); it != sTagName.upper_bound(name); ++it)
 		{
 			result.push_back(Result(raw, it->second));
 		}
 		return result;
+	}
+	Results MLParser::SearchByAttribute(const string & AttributeName)
+	{
+		StrNode::iterator it;
+		list<Result> result;
+		for (it = sAttribute.lower_bound(AttributeName); it != sAttribute.upper_bound(AttributeName); ++it)
+		{
+			result.push_back(Result(raw, it->second));
+		}
+		return result;
+	}
+	Results MLParser::SearchByAttribute(const string & AttributeName, const string & AttributeValue)
+	{
+		Results rs = SearchByAttribute(AttributeName), rs2;
+		string atValue;
+		for (auto result : rs)
+		{
+			result.FindAttribute(AttributeName, atValue);
+			if(atValue == AttributeValue)
+			{
+				rs2.push_back(result);
+			}
+		}
+		return rs2;
 	}
 }

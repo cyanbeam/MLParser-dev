@@ -18,7 +18,8 @@ namespace Cyan
 		Node *root;
 		Node *now;//saving a location for query
 		string errorMsg;
-		StrNode TagName;//存储 <tagname,Node*> 元组，用于模糊查询
+		StrNode sTagName;//存储 <tagname,Node*> 元组，用于模糊查询
+		StrNode sAttribute;//用于模糊搜索
 		void Print(Cyan::Node * node, size_t count, bool printAttribute, bool printBrother);
 		void preprocess(string &m);
 		void Copy(MLParser & MLP)
@@ -34,7 +35,11 @@ namespace Cyan
 		}
 		void AddTag(Node *node)
 		{
-			TagName.insert(make_pair(node->tagName, node));
+			sTagName.insert(make_pair(node->tagName, node));
+		}
+		void AddAttribute(string name, Node *node)
+		{
+			sAttribute.insert(make_pair(name, node));
 		}
 	public:
 		MLParser() :raw(nullptr), root(nullptr), now(nullptr), errorMsg("") {}
@@ -80,6 +85,8 @@ namespace Cyan
 			return t;
 		}
 		Results SearchByTagName(const string &name);
+		Results SearchByAttribute(const string &AttributeName);
+		Results SearchByAttribute(const string &AttributeName,const string &AttributeValue);
 		string GetErrorMsg() const
 		{
 			return errorMsg;
