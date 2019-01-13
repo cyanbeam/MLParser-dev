@@ -103,15 +103,18 @@ namespace Cyan
 			now = root;
 			return t;
 		}
-		string GetAttribute(const string & AttributeName) 
+		bool FindAttribute(const string & AttributeName,string & AttributeValue) 
 		{
 			string *ps = now->GetAttribute(AttributeName);
 			if (ps == nullptr)
 			{
 				SetErrMsg("Can't find Attribute '" + AttributeName + "'");
+				AttributeValue = "";
+				return false;
 			}
+			AttributeValue = string(*ps);
 			now = root;
-			return *ps;
+			return true;
 		}
 		string GetContent() const;
 		string GetInner()

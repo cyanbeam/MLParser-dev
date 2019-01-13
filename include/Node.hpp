@@ -123,7 +123,7 @@ namespace Cyan
 			txtOffset(0),
 			count(0) {}
 		~Node() { delete attributes; delete brother; delete child; }
-		string *GetAttribute(const string & AttributeName) const//ÐèÒªÐÞ¸Ä
+		string *GetAttribute(const string & AttributeName) const
 		{
 			Attribute *tA = attributes;
 			while (tA != nullptr)
