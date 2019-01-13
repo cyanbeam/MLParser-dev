@@ -21,10 +21,14 @@ int main(int argc, char **argv)
 	MLParser ml;
 	ml.Parse(s);
 	ml.PrintTree(false);
-	Results rs = ml.SearchByAttribute("class", "contitle");
+	Results rs = ml.SearchByAttribute("class", "BDE_Image");
 	for (auto result : rs)
 	{
-		cout << result.GetInner() << endl;
+		string atValue;
+		if (result.FindAttribute("src", atValue))
+		{
+			cout << atValue << endl;
+		}
 	}
 	ml.Dispose();
 	getchar();

@@ -19,7 +19,7 @@ namespace Cyan
 		Token *next = nullptr;
 		~Token()
 		{
-			delete next;
+			//不可以递归删除，太多了会溢出
 		}
 	};
 	class Scanner
@@ -92,7 +92,16 @@ namespace Cyan
 		{
 			root = new Token;
 		}
-		~Scanner() { delete root; }
+		~Scanner()
+		{ 
+			Token *now = root, *then;
+			while (now)
+			{
+				then = now->next;
+				delete now;
+				now = then;
+			}
+		}
 		void Scan();
 		Token *next()
 		{
