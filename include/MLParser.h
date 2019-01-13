@@ -2,7 +2,8 @@
 #include "Node.hpp"
 #include <string>
 #include <map>
-//#include <gtest\gtest.h>
+#include <list>
+using std::list;
 using std::multimap;
 using std::string;
 using std::make_pair;
@@ -47,55 +48,9 @@ namespace Cyan
 		}
 		~MLParser() {}
 		bool Parse(string html);
-		void PrintTree(bool printAttributes = false)
-		{
-			Print(now, 0, printAttributes, false);
-		}
-		MLParser & operator[](string tagName)
-		{
-			if (tagName == "") { now = root; return *this; }
-			if (now->child != nullptr)
-			{
-				if (now->child->tagName == tagName)
-				{
-					now = now->child;
-					return *this;
-				}
-				Node *tNode = now->child->brother;
-				while (tNode != nullptr)
-				{
-					if (tNode->tagName == tagName)
-					{
-						now = tNode;
-						return *this;
-					}
-					tNode = tNode->brother;
-				}
-			}
-			SetErrMsg("Can't find <" + tagName + ">");
-			return *this;
-		}
-		MLParser & operator[](unsigned short n)
-		{
-			if (n == 0) { return *this; }
-			unsigned short i = 0;
-			Node *tNode = now->brother;
-			while (tNode != nullptr)
-			{
-				if (tNode->tagName == now->tagName)
-				{
-					++i;
-				}
-				if (i == n)
-				{
-					now = tNode;
-					return *this;
-				}
-				tNode = tNode->brother;
-			}
-			SetErrMsg("Can't find <" + now->tagName + ">[" + std::to_string(n) + "]");
-			return *this;
-		}
+		void PrintTree(bool printAttributes = false);
+		MLParser & operator[](string tagName);
+		MLParser & operator[](unsigned short n);
 		MLParser & XPath(string xpath);
 		string GetTagName() 
 		{
@@ -123,6 +78,7 @@ namespace Cyan
 			now = root;
 			return t;
 		}
+		list<Result> SearchByTagName(const string &name);
 		string GetErrorMsg() const
 		{
 			return errorMsg;

@@ -128,6 +128,10 @@ namespace Cyan
 		now = root;
 		return true;
 	}
+	void MLParser::PrintTree(bool printAttributes)
+	{
+		Print(now, 0, printAttributes, false);
+	}
 	void MLParser::Print(Cyan::Node *node, size_t count,bool printAttribute,bool printBrother)
 	{
 		using std::cout;
@@ -163,5 +167,50 @@ namespace Cyan
 				Print(node->brother, count, printAttribute, printBrother);
 			}
 		}
+	}
+	MLParser & MLParser::operator[](string tagName)
+	{
+		if (tagName == "") { now = root; return *this; }
+		if (now->child != nullptr)
+		{
+			if (now->child->tagName == tagName)
+			{
+				now = now->child;
+				return *this;
+			}
+			Node *tNode = now->child->brother;
+			while (tNode != nullptr)
+			{
+				if (tNode->tagName == tagName)
+				{
+					now = tNode;
+					return *this;
+				}
+				tNode = tNode->brother;
+			}
+		}
+		SetErrMsg("Can't find <" + tagName + ">");
+		return *this;
+	}
+	MLParser & MLParser::operator[](unsigned short n)
+	{
+		if (n == 0) { return *this; }
+		unsigned short i = 0;
+		Node *tNode = now->brother;
+		while (tNode != nullptr)
+		{
+			if (tNode->tagName == now->tagName)
+			{
+				++i;
+			}
+			if (i == n)
+			{
+				now = tNode;
+				return *this;
+			}
+			tNode = tNode->brother;
+		}
+		SetErrMsg("Can't find <" + now->tagName + ">[" + std::to_string(n) + "]");
+		return *this;
 	}
 }
