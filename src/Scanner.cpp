@@ -1,7 +1,7 @@
 #include "Scanner.hpp"
 namespace Cyan
 {
-	void Scanner::Scan()
+		void Scanner::Scan()
 	{
 		size_t offset = 0;
 		Token *lastToken = root;
@@ -36,7 +36,7 @@ namespace Cyan
 					lastToken = lastToken->next;
 					lastToken->type = AttributeName;
 					lastToken->value = gstrExcept('=', ' ', '>', offset);
-					skipAll(' ', '=', offset);
+					skipAll(' ','=', offset);
 					//skipAll('=', offset);
 
 					//用单、双引号括起来的字符串里可能出现空格，为了正确分割
@@ -50,7 +50,7 @@ namespace Cyan
 					//
 					//the next judge is to fix this bug.
 					if (flag == '>') break;
-
+					
 					lastToken->next = new Token;
 					lastToken = lastToken->next;
 					lastToken->type = AttributeValue;
