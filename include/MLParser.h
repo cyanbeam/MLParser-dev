@@ -20,6 +20,7 @@ namespace Cyan
 		Node *root;
 		Node *now;//saving a location for query
 		string errorMsg;
+		bool okay;
 		StrNode sTagName;//存储 <tagname,Node*> 元组，用于模糊查询
 		StrNode sAttribute;//用于模糊搜索
 		void Print(Cyan::Node * node, size_t count, bool printAttribute, bool printBrother);
@@ -43,8 +44,13 @@ namespace Cyan
 		{
 			sAttribute.insert(make_pair(name, node));
 		}
+		void SetErrMsg(string msg)
+		{
+			errorMsg = msg;
+			okay = false;
+		}
 	public:
-		MLParser() :raw(nullptr), root(nullptr), now(nullptr), errorMsg("") {}
+		MLParser() :raw(nullptr), root(nullptr), now(nullptr), errorMsg("") ,okay(true){}
 		MLParser(MLParser & MLP)
 		{
 			Copy(MLP);
@@ -59,7 +65,6 @@ namespace Cyan
 		void PrintTree(bool printAttributes = false);
 		MLParser & operator[](string tagName);
 		MLParser & operator[](unsigned short n);
-		MLParser & XPath(string xpath);
 		string GetTagName() 
 		{
 			string t = now->tagName;
@@ -97,13 +102,15 @@ namespace Cyan
 		Results SearchByTagName(const string &name);
 		Results SearchByAttribute(const string &AttributeName);
 		Results SearchByAttribute(const string &AttributeName,const string &AttributeValue);
-		string GetErrorMsg() const
+		string GetErrorMsg()
 		{
+			now = root;//重置状态便于继续使用
+			okay = true;//重置状态便于继续使用
 			return errorMsg;
 		}
-		void SetErrMsg(string msg)
+		bool OK() const
 		{
-			errorMsg = msg;
+			return okay;
 		}
 		void Dispose()
 		{
