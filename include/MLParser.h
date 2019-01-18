@@ -3,6 +3,7 @@
 #include <string>
 #include <map>
 #include <list>
+#include <regex>
 using std::list;
 using std::multimap;
 using std::string;
@@ -77,7 +78,15 @@ namespace Cyan
 			now = root;
 			return true;
 		}
-		string GetContent() const;
+		string GetContent()
+		{
+			using std::regex;
+			string t = substr(raw + now->txtOffset, now->count);
+			regex exp("<([\\s\\S]+)>");
+			t = regex_replace(t, exp, "");
+			now = root;
+			return t;
+		}
 		string GetInner()
 		{
 			string t =  substr(raw + now->txtOffset, now->count);
@@ -124,7 +133,14 @@ namespace Cyan
 			AttributeValue = string(*ps);
 			return true;
 		}
-		string GetContent() const;
+		string GetContent()
+		{
+			using std::regex;
+			string t = substr(raw + node->txtOffset, node->count);
+			regex exp("<([\\s\\S]+)>");
+			t = regex_replace(t, exp, "");
+			return t;
+		}
 		string GetInner()
 		{
 			return substr(raw + node->txtOffset, node->count);
