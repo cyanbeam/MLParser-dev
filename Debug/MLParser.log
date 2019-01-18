@@ -1,2 +1,6 @@
-﻿  Test.cpp
-  MLParser.vcxproj -> G:\Project\MLParser\Debug\MLParser.exe
+﻿  MLParser.cpp
+  Scanner.cpp
+  Scanner_Test.cpp
+  Test.cpp
+  正在生成代码...
+  MLParser.vcxproj -> E:\Project\MLParser\Debug\MLParser.exe

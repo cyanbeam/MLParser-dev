@@ -12,7 +12,7 @@ int main(int argc, char **argv)
 	//_CrtSetBreakAlloc(188);
 	char buffer[256];
 	FILE *fp;
-	fopen_s(&fp, "G:\\test.html", "rb+");
+	fopen_s(&fp, "E:\\test.html", "rb+");
 	string s;
 	size_t n;
 	memset(buffer, '\0', 256);
@@ -25,7 +25,7 @@ int main(int argc, char **argv)
 	fclose(fp);
 	MLParser ml;
 	ml.Parse(s);
-	//ml.PrintTree(false);
+	ml.PrintTree(false);
 	Results rs = ml.SearchByAttribute("class", "BDE_Image");
 	for (auto result : rs)
 	{
