@@ -29,7 +29,7 @@ int main(int argc, char **argv)
 	Results rs = ml.SearchByTagName("span");
 	for (auto result : rs)
 	{
-		cout << result.GetContent() << endl;
+		cout << result.GetMLParser()["em"].GetInner() << endl;
 	}
 	ml.Dispose();
 	getchar();

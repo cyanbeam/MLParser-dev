@@ -119,6 +119,11 @@ namespace Cyan
 		Node *node;
 		Result(MLParser *ml_, Node *node_) :ml(ml_), node(node_) {}
 	public:
+		MLParser &GetMLParser()
+		{
+			ml->now = node;
+			return *ml;
+		}
 		string GetTagName()
 		{
 			return node->tagName;
