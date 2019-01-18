@@ -67,12 +67,14 @@ namespace Cyan
 		MLParser & operator[](unsigned short n);
 		string GetTagName() 
 		{
+			if (!okay) return "";
 			string t = now->tagName;
 			now = root;
 			return t;
 		}
 		bool FindAttribute(const string & AttributeName,string & AttributeValue) 
 		{
+			if (!okay) return false;
 			string *ps = now->GetAttribute(AttributeName);
 			if (ps == nullptr)
 			{
@@ -86,6 +88,7 @@ namespace Cyan
 		}
 		string GetContent()
 		{
+			if (!okay) return "";
 			using std::regex;
 			string t = substr(raw + now->txtOffset, now->count);
 			regex exp("<([\\s\\S]+)>");
@@ -95,6 +98,7 @@ namespace Cyan
 		}
 		string GetInner()
 		{
+			if (!okay) return "";
 			string t =  substr(raw + now->txtOffset, now->count);
 			now = root;
 			return t;
@@ -104,7 +108,9 @@ namespace Cyan
 		Results SearchByAttribute(const string &AttributeName,const string &AttributeValue);
 		string GetErrorMsg()
 		{
-			now = root;//重置状态便于继续使用
+			//不需要重置now的状态
+			//在搜索时检测到okay为false
+			//会自动重置now=root
 			okay = true;//重置状态便于继续使用
 			return errorMsg;
 		}

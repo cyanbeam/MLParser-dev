@@ -26,10 +26,14 @@ int main(int argc, char **argv)
 	MLParser ml;
 	ml.Parse(s);
 	ml.PrintTree(false);
-	Results rs = ml.SearchByTagName("span");
-	for (auto result : rs)
+	ml["html"]["b"];
+	if (ml.OK())
 	{
-		cout << result.GetMLParser()["em"].GetInner() << endl;
+		cout << ml.GetInner() << endl;
+	}
+	else
+	{
+		cout << ml.GetErrorMsg() << endl;
 	}
 	ml.Dispose();
 	getchar();
