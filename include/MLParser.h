@@ -14,6 +14,7 @@ namespace Cyan
 	typedef list<Result> Results;
 	class MLParser
 	{
+	friend class Result;
 	private:
 		char *raw;//saving raw text
 		Node *root;
@@ -114,9 +115,9 @@ namespace Cyan
 	{
 		friend class MLParser;
 	private:
-		char *raw;
+		MLParser *ml;
 		Node *node;
-		Result(char *raw_, Node *node_) :raw(raw_), node(node_) {}
+		Result(MLParser *ml_, Node *node_) :ml(ml_), node(node_) {}
 	public:
 		string GetTagName()
 		{
@@ -124,26 +125,18 @@ namespace Cyan
 		}
 		bool FindAttribute(const string & AttributeName, string & AttributeValue)
 		{
-			string *ps = node->GetAttribute(AttributeName);
-			if (ps == nullptr)
-			{
-				AttributeValue = "";
-				return false;
-			}
-			AttributeValue = string(*ps);
-			return true;
+			ml->now = node;
+			return ml->FindAttribute(AttributeName, AttributeValue);
 		}
 		string GetContent()
 		{
-			using std::regex;
-			string t = substr(raw + node->txtOffset, node->count);
-			regex exp("<([\\s\\S]+)>");
-			t = regex_replace(t, exp, "");
-			return t;
+			ml->now = node;
+			return ml->GetContent();
 		}
 		string GetInner()
 		{
-			return substr(raw + node->txtOffset, node->count);
+			ml->now = node;
+			return ml->GetInner();
 		}
 		~Result() {}
 	};

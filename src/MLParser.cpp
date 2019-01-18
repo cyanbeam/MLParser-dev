@@ -221,7 +221,7 @@ namespace Cyan
 		list<Result> result;
 		for (it = sTagName.lower_bound(name); it != sTagName.upper_bound(name); ++it)
 		{
-			result.push_back(Result(raw, it->second));
+			result.push_back(Result(this, it->second));
 		}
 		return result;
 	}
@@ -231,7 +231,7 @@ namespace Cyan
 		list<Result> result;
 		for (it = sAttribute.lower_bound(AttributeName); it != sAttribute.upper_bound(AttributeName); ++it)
 		{
-			result.push_back(Result(raw, it->second));
+			result.push_back(Result(this, it->second));
 		}
 		return result;
 	}
