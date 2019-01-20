@@ -4,8 +4,6 @@
 #include <map>
 #include <list>
 #include <regex>
-#include <vector>
-using std::vector;
 using std::list;
 using std::multimap;
 using std::string;
@@ -14,7 +12,6 @@ namespace Cyan
 {
 	typedef multimap<string, Node *> StrNode;
 	typedef list<Result> Results;
-	typedef vector<vector<string>> Table;
 	class MLParser
 	{
 	friend class Result;
@@ -109,7 +106,6 @@ namespace Cyan
 		Results SearchByTagName(const string &name);
 		Results SearchByAttribute(const string &AttributeName);
 		Results SearchByAttribute(const string &AttributeName,const string &AttributeValue);
-		Table ToTable();
 		string GetErrorMsg()
 		{
 			//不需要重置now的状态
