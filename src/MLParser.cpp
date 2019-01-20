@@ -249,4 +249,8 @@ namespace Cyan
 		}
 		return rs2;
 	}
+	Table MLParser::ToTable()
+	{
+		return Table();
+	}
 }
