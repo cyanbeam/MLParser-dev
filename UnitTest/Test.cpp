@@ -12,7 +12,7 @@ int main(int argc, char **argv)
 	//_CrtSetBreakAlloc(188);
 	char buffer[256];
 	FILE *fp;
-	fopen_s(&fp, "E:\\test.html", "rb+");
+	fopen_s(&fp, "testData\\test.html", "rb");
 	string s;
 	size_t n;
 	memset(buffer, '\0', 256);
@@ -26,7 +26,7 @@ int main(int argc, char **argv)
 	MLParser ml;
 	ml.Parse(s);
 	ml.PrintTree(false);
-	ml["html"]["b"];
+	ml["html"]["head"]["title"];
 	if (ml.OK())
 	{
 		cout << ml.GetInner() << endl;
